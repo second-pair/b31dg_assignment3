@@ -1,0 +1,4 @@
+BUILD/
+.temp/
+lib-builds/
+src-builds/
