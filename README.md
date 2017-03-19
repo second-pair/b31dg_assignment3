@@ -24,6 +24,7 @@ The *Makefile* currently accepts the following arguments:
 *  make: Runs `srcs` (this is what is run if `make` is run without any arguments).
 *  all: Runs `libs` then `srcs`.
 *  clean: Cleans built files form the project.
+
 For example, running `make all` will recompile the static libraries and then compile the main source.
 
 ##  Links
