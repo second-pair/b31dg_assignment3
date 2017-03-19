@@ -5,6 +5,7 @@ Assignment 3 for the Heriot-Watt B31DG Course
 This project requires a few things to build:
 1.  A suitable mbed-compatible compilation toochain.
 	*  This project is using the `ARM_GCC` toolchain, but this can be changed in the *Makefile*.
+	*  These toolchains are most likely available from your package manager as well as from the developer's website.
 1.  The `mbed_cli` CLI.
 
 ##  Setup Instructions
@@ -17,7 +18,7 @@ This project requires a few things to build:
 
 ##  Compilation Instructions
 While this project can be compiled using `mbed compile`, a *Makefile* has also been provided.
-This currently only works on Windows.
+This currently only works in a Linux environment.
 The *Makefile* currently accepts the following arguments:
 *  libs: Builds a static copy of the libraries.
 *  srcs: Builds the source files (assumes libraries have been statically built).
