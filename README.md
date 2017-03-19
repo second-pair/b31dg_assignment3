@@ -18,7 +18,7 @@ This project requires a few things to build:
 
 ##  Compilation Instructions
 While this project can be compiled using `mbed compile`, a *Makefile* has also been provided.
-This currently only works in a Linux environment.
+This currently only works in a Windows environment.
 The *Makefile* currently accepts the following arguments:
 *  libs: Builds a static copy of the libraries.
 *  srcs: Builds the source files (assumes libraries have been statically built).
