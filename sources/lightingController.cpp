@@ -44,8 +44,6 @@ void lighting (void)  //  Threaded
 	bool leftSig;
 	bool rightSig;
 
-	char toSend [16];
-
 	while (true)
 	{
 		//  Read lighting data from switches
@@ -95,7 +93,7 @@ void lighting (void)  //  Threaded
 		//  Update Engine Status LED with stored value
 		engineStatusLed = engineStatus;
 
-		Thread::wait (10);
+		Thread::wait (100);
 	}
 
 	return;

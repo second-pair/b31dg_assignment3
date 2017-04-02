@@ -35,6 +35,7 @@ void engineManager (void);
 void lighting (void);
 void indicatorStrober (void);
 void engineStatus (void);
+void sendSerial (void);
 
 //  Logic Parameters
 #define TRUE 1
@@ -42,6 +43,15 @@ void engineStatus (void);
 #define HIGH 1
 #define LOW 0
 #define MAX_SPEED 250
+
+//  Structs
+struct serialDumperStruct
+{
+	float acceleration;
+	float slowage;
+	char rawSpeed;
+	char filteredSpeed;
+};
 
 //  LCD Parameters
 extern MCP23017 *par_port;
@@ -53,6 +63,7 @@ extern Thread engineManagerThread;
 extern Thread lightingThread;
 extern Thread indicatorStroberThread;
 extern Thread engineStatusThread;
+extern Thread sendSerialThread;
 
 //  Mutexes
 extern Mutex writeLcdMutex;
@@ -67,6 +78,7 @@ extern Queue <float, 16> slowageQueueESU;
 extern Queue <bool, 16> engineStatusQueueLC;
 extern Queue <char, 16> speedQueue;
 extern Queue <int, 16> distanceQueue;
+extern Mail <serialDumperStruct, 16> serialDumperMail;
 
 //  IO
 //  Serial Comms
@@ -87,6 +99,3 @@ extern DigitalOut rightSigLed;
 extern DigitalOut overspeedLed;
 //  PWM Outputs
 extern PwmOut speedometer;
-
-//  Structs
-//theMailQueue struct

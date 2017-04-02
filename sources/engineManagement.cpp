@@ -83,7 +83,7 @@ void engineManager (void)
 		speedQueue.put (&speedInt);
 		distanceQueue.put (&distance);
 
-		Thread::wait (1);
+		Thread::wait (100);
 	}
 }
 

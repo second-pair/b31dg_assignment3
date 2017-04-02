@@ -42,7 +42,6 @@
 
  -=-  TODO  -=-
  =>  Abstract code in engineStatus
- =>  MAIL Queue
  =>  Some semblence of time for distance calculator
  =>  Scheduling - perhaps use signaling?
 
@@ -63,6 +62,7 @@ int main (void)
     lightingThread.start (lighting);
     indicatorStroberThread.start (indicatorStrober);
     engineStatusThread.start (engineStatus);
+    sendSerialThread.start (sendSerial);
 
     Thread::wait (osWaitForever);
     return 0;

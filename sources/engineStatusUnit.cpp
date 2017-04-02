@@ -18,6 +18,9 @@
 //  Threads
 Thread engineStatusThread;
 
+//  Data Queues
+Mail <serialDumperStruct, 16> serialDumperMail;
+
 //  IO
 //  Digital Outputs
 DigitalOut overspeedLed (p16);
@@ -37,6 +40,7 @@ void engineStatus (void)
 	int distance = 0;
 	char toSend [16];
 	speedometer.period (0.020);
+	serialDumperStruct *serialDumperData = serialDumperMail.alloc ();
 
 	while (true)
 	{
@@ -76,7 +80,6 @@ void engineStatus (void)
 			//  New value received -> store it
 			memcpy (&distance, distanceQueueEvt.value.p, sizeof (int));
 
-
 		//  Control Servo to represent filtered speed
 		speedometer.pulsewidth_us (2000 - (filteredSpeed * 8));
 
@@ -93,10 +96,16 @@ void engineStatus (void)
 			overspeedLed = LOW;
 
 		//  MAIL Queue
+		serialDumperData -> acceleration = acceleration;
+		serialDumperData -> slowage = slowage;
+		serialDumperData -> rawSpeed = rawSpeed [0];
+		serialDumperData -> filteredSpeed = filteredSpeed;
+		serialDumperMail.put (serialDumperData);
 
-		Thread::wait (1);
+		Thread::wait (100);
 	}
 
+	serialDumperMail.free (serialDumperData);
 	return;
 }
 
