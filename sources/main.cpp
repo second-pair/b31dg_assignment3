@@ -63,12 +63,10 @@ int main (void)
 {
     init ();
 
-    //readControlsThread.start (readControls);
-    //lightingThread.start (lighting);
-    //engineStatusThread.start (engineStatus);
-
-    //Thread::wait (2500);
-    //sendDataThd.signal_set (0x1);
+    readControlsThread.start (readControls);
+    engineManagerThread.start (engineManager);
+    lightingThread.start (lighting);
+    engineStatusThread.start (engineStatus);
 
     Thread::wait (osWaitForever);
     return 0;

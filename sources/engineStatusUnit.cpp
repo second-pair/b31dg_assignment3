@@ -18,10 +18,6 @@
 //  Threads
 Thread engineStatusThread;
 
-//  Data Queues (move both to "Engine Management" later)
-Queue <char, 16> speedQueue;
-Queue <int, 16> distanceQueue;
-
 //  IO
 //Out to Servo, LCD, Overspeed, MAIL
 //In Raw speed (to be filtered), distance, acc, slowage
@@ -36,13 +32,12 @@ void engineStatus (void)
 	unsigned short int acceleration = 0;
 	unsigned short int slowage = 0;
 	char rawSpeed [4] = {0, 0, 0, 0};
-	int filteredSpeed = 65;
-	int distance = 9001;
+	char filteredSpeed = 0;
+	int distance = 0;
 	char toSend [16];
 
 	while (true)
 	{
-		//writeLcd (0, 0, "0");
 		//  Read the Acceleration Queue
 		accelerationQueueEvt = accelerationQueue.get ();
 		//  Check if a message was received
@@ -51,7 +46,6 @@ void engineStatus (void)
 			//acceleration = *((unsigned short int *) (&accelerationQueueEvt.value.p));
 			memcpy (&acceleration, accelerationQueueEvt.value.p, sizeof (unsigned short int));
 
-		//writeLcd (0, 1, "1");
 		//  Read the Slowage Queue
 		slowageQueueEvt = slowageQueue.get ();
 		//  Check if message was received
@@ -60,28 +54,22 @@ void engineStatus (void)
 			//slowage = (unsigned short int) slowageQueueEvt.value.p;
 			memcpy (&slowage, slowageQueueEvt.value.p, sizeof (unsigned short int));
 
-		//writeLcd (0, 2, "2");
 		//  Read the Speed Queue (FILTER)
 		speedQueueEvt = speedQueue.get ();
 		//  Check if a messagge was received
-		//writeLcd (0, 3, "3");
 		if (speedQueueEvt.status == osEventMessage)
 		{
-			//writeLcd (0, 4, "4");
 			//  New value received -> filter and store it
 			//  Could parhaps have a variable that cycles which vaule to write?
 			rawSpeed [3] = rawSpeed [2];
 			rawSpeed [2] = rawSpeed [1];
 			rawSpeed [1] = rawSpeed [0];
 			//rawSpeed [0] = (char) speedQueueEvt.value.p;
-			//writeLcd (0, 5, "5");
 			memcpy (&rawSpeed[0], speedQueueEvt.value.p, sizeof (char));
-			//writeLcd (0, 6, "6");
 			filteredSpeed = (rawSpeed [3] + rawSpeed [2] + rawSpeed [1]
 				+ rawSpeed [0]) / 4;
 		}
 
-		//writeLcd (0, 7, "7");
 		//  Read the Distance Queue
 		distanceQueueEvt = distanceQueue.get ();
 		//  Check if message was received
@@ -92,15 +80,10 @@ void engineStatus (void)
 
 
 		//  Control Servo to represent filtered speed
-		//writeLcd (0, 8, "8");
 		//  Write speed and distance to LCD
-		strcpy (toSend, "Speed:  ");
-		strcat (toSend, (char*) filteredSpeed);
-		strcat (toSend, " MPH");
+		sprintf (toSend, "Speed:  %d MPH", filteredSpeed);
 		writeLcd (0, 0, toSend);
-		strcpy (toSend, "Dist:  ");
-		strcat (toSend, (char*) distance);
-		strcat (toSend, " m");
+		sprintf (toSend, "Dist:  %d m", distance);
 		writeLcd (1, 0, toSend);
 
 		//  Detect overspeed

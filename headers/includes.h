@@ -31,6 +31,7 @@ int initSerial (void);
 void writeLcd (char line, char offset, const char *message);
 //  Threaded
 void readControls (void);
+void engineManager (void);
 void lighting (void);
 void engineStatus (void);
 
@@ -46,6 +47,7 @@ extern WattBob_TextLCD *lcd;
 
 //  Threads
 extern Thread readControlsThread;
+extern Thread engineManagerThread;
 extern Thread lightingThread;
 extern Thread engineStatusThread;
 
@@ -77,3 +79,6 @@ extern DigitalOut sideLightLed;
 extern DigitalOut leftSigLed;
 extern DigitalOut rightSigLed;
 extern DigitalOut overspeedLed;
+
+//  Structs
+//theMailQueue struct
