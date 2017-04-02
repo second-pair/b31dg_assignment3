@@ -19,6 +19,7 @@
 Thread readControlsThread;
 
 //  Data Queues
+MemoryPool <unsigned short int, 16> accelerationMPool;
 Queue <unsigned short int, 16> accelerationQueue;
 Queue <unsigned short int, 16> slowageQueue;
 Queue <bool, 16> engineStatusQueue;
@@ -39,8 +40,8 @@ void readControls (void)
 	while (true)
 	{
 		//  Read Inputs
-		acceleration = accelerator.read ();
-		slowage = brake.read ();
+		acceleration = accelerator.read_u16 ();
+		slowage = brake.read_u16 ();
 		engineStatus = engineStatusSwt;
 
 		//  Write to Engine Manager

@@ -22,7 +22,7 @@ WattBob_TextLCD *lcd;
 //  Mutexes
 Mutex writeLcdMutex;
 
-void writeLcd (char line, char offset, char *message)
+void writeLcd (char line, char offset, const char *message)
 {
 	writeLcdMutex.lock ();
 	lcd -> locate (line, offset);

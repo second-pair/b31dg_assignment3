@@ -53,7 +53,8 @@ void lighting (void)  //  Threaded
 		//  Check if a message was received
 		if (engineStatusQueueEvt.status == osEventMessage)
 			//  New value received -> store it
-			engineStatus = (bool) engineStatusQueueEvt.value.p;
+			//engineStatus = (bool) engineStatusQueueEvt.value.p;
+			memcpy (&engineStatus, engineStatusQueueEvt.value.p, sizeof (bool));
 		//  Update Engine Status LED with stored value
 		engineStatusLed = engineStatus;
 

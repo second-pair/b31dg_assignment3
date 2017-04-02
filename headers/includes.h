@@ -28,10 +28,11 @@ int init (void);
 int initLcd (void);
 int initSerial (void);
 //  Functions
-void writeLcd (char line, char offset, char *message);
+void writeLcd (char line, char offset, const char *message);
 //  Threaded
 void readControls (void);
 void lighting (void);
+void engineStatus (void);
 
 //  Logic Parameters
 #define TRUE 1
@@ -46,6 +47,7 @@ extern WattBob_TextLCD *lcd;
 //  Threads
 extern Thread readControlsThread;
 extern Thread lightingThread;
+extern Thread engineStatusThread;
 
 //  Mutexes
 extern Mutex writeLcdMutex;
@@ -53,6 +55,8 @@ extern Mutex writeLcdMutex;
 //  Data Queues
 extern Queue <unsigned short int, 16> accelerationQueue;
 extern Queue <unsigned short int, 16> slowageQueue;
+extern Queue <char, 16> speedQueue;
+extern Queue <int, 16> distanceQueue;
 extern Queue <bool, 16> engineStatusQueue;
 
 //  IO
@@ -72,4 +76,4 @@ extern DigitalOut engineStatusLed;
 extern DigitalOut sideLightLed;
 extern DigitalOut leftSigLed;
 extern DigitalOut rightSigLed;
-//extern DigitalOut overspeedLed;
+extern DigitalOut overspeedLed;

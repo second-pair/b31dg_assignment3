@@ -42,65 +42,30 @@
 
  -=-  TODO  -=-
  =>  Write many
+ =>  Turn Indicator Flashing (separate functions?)
+ =>  Turn Indicator Hazard Mode
+ =>  Engine Manager
  =>  Make engine simulation toggleable?  Investigate
+ =>  Abstract code in engineStatus
+ =>  Investigate Queue direct assignment (What is 'p' in "queue.value.p"?)
+ =>  Servo Control
+ =>  MAIL Queue
 
 //  *--</Preface>--*  */
 
 
 
-//  *--<Preparations>--*  //
-
-#include "includes.h"
-
-//  Threads
-//
-
-//  Data Queues
-//
-
-//  IO
-//  Digital Inputs
-//DigitalIn aDigitalIn (p0);
-//  Analogue Inputs
-//AnalogIn anAnalogueIn (p0);
-//  Digital Outputs
-//DigitalOut aDigitalOut (p0);
-
-//  *--</Preparations>--*  //
-
-
-
 //  *--<Main Code>--*  //
 
-/*void sendData (void)
-{
-    Thread::signal_wait (0x1);
-    lcd -> locate (0, 0);
-    lcd -> printf ("Sig");
-    Thread::wait (2500);
-
-    dataQueue.put ("456");
-    recvDataThd.signal_set (0x2);
-    return;
-}
-
-void recvData (void)
-{
-    char toSend [16];
-    Thread::signal_wait (0x2);
-    osEvent evt = dataQueue.get ();
-    strcpy (toSend, "msg ");
-    strcat (toSend, (const char *) evt.value.p);
-    writeLcd (1, 0, toSend);
-    return;
-}*/
-
+#include "includes.h"
 
 int main (void)
 {
     init ();
 
-    lightingThread.start (lighting);
+    //readControlsThread.start (readControls);
+    //lightingThread.start (lighting);
+    //engineStatusThread.start (engineStatus);
 
     //Thread::wait (2500);
     //sendDataThd.signal_set (0x1);

@@ -2,3 +2,4 @@ BUILD/
 .temp/
 lib-builds/
 src-builds/
+latest-build.bin

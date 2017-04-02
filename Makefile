@@ -16,6 +16,7 @@ clean-srcs:
 srcs: clean-srcs
 	mkdir src-builds
 	mbed compile -t $(TOOLCHAIN) -m $(PLATFORM) --build=src-builds --source=lib-builds --source=sources --source=headers
+	if exist src-builds\lib-builds.bin copy /Y /B src-builds\lib-builds.bin latest-build.bin /B
 
 clean-extras:
 	if exist BUILD rmdir /Q /S BUILD
