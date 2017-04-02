@@ -35,6 +35,10 @@
 
  -=-  Notes  -=-
  =>  Data communication between threads uses the "Queue" method
+ =>  LED1 = Engine Status
+ =>  LED2 = Side Lights
+ =>  LED3 = Left Turn indicator
+ =>  LED4 = Right Turn Indicator
 
  -=-  TODO  -=-
  =>  Write many
@@ -49,11 +53,10 @@
 #include "includes.h"
 
 //  Threads
-Thread recvDataThd;
-Thread sendDataThd;
+//
 
 //  Data Queues
-Queue <char, 16> dataQueue;
+//
 
 //  IO
 //  Digital Inputs
@@ -69,7 +72,7 @@ Queue <char, 16> dataQueue;
 
 //  *--<Main Code>--*  //
 
-void sendData (void)
+/*void sendData (void)
 {
     Thread::signal_wait (0x1);
     lcd -> locate (0, 0);
@@ -90,18 +93,17 @@ void recvData (void)
     strcat (toSend, (const char *) evt.value.p);
     writeLcd (1, 0, toSend);
     return;
-}
+}*/
 
 
 int main (void)
 {
     init ();
 
-    recvDataThd.start (recvData);
-    sendDataThd.start (sendData);
+    lightingThread.start (lighting);
 
-    Thread::wait (2500);
-    sendDataThd.signal_set (0x1);
+    //Thread::wait (2500);
+    //sendDataThd.signal_set (0x1);
 
     Thread::wait (osWaitForever);
     return 0;
