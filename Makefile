@@ -18,7 +18,7 @@ srcs: clean-srcs
 	mbed compile -t $(TOOLCHAIN) -m $(PLATFORM) --build=src-builds --source=lib-builds --source=sources --source=headers
 	if exist src-builds\lib-builds.bin copy /Y /B src-builds\lib-builds.bin latest-build.bin /B
 
-clean: clean-libs clean-srcs clean-extras
+clean: clean-libs clean-srcs
 	if exist BUILD rmdir /Q /S BUILD
 	if exist mbed_settings.pyc del /Q mbed_settings.pyc
 	if exist latest-build.bin del /Q latest-build.bin
