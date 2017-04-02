@@ -24,10 +24,12 @@ Mutex writeLcdMutex;
 
 void writeLcd (char line, char offset, const char *message)
 {
+	//  Lock access to the LCD and write to it
 	writeLcdMutex.lock ();
 	lcd -> locate (line, offset);
     lcd -> printf ("%s", message);
 	writeLcdMutex.unlock ();
+
 	return;
 }
 
@@ -35,7 +37,8 @@ int initLcd (void)
 {
     //  Initialise the display
     par_port = new MCP23017(p9, p10, 0x40);
-    par_port->config(0x0F00, 0x0F00, 0x0F00);  // configure MCP23017 chip on WattBob
+	// configure MCP23017 chip on WattBob
+    par_port->config(0x0F00, 0x0F00, 0x0F00);
     lcd = new WattBob_TextLCD(par_port);
     par_port->write_bit(1,BL_BIT);  // turn LCD backlight ON
 

@@ -44,6 +44,7 @@
  =>  Abstract code in engineStatus
  =>  Some semblence of time for distance calculator
  =>  Scheduling - perhaps use signaling?
+ =>  Documentation
 
 //  *--</Preface>--*  */
 
@@ -57,6 +58,7 @@ int main (void)
 {
     init ();
 
+    //  Start threads
     readControlsThread.start (readControls);
     engineManagerThread.start (engineManager);
     lightingThread.start (lighting);
@@ -64,12 +66,19 @@ int main (void)
     engineStatusThread.start (engineStatus);
     sendSerialThread.start (sendSerial);
 
-    Thread::wait (osWaitForever);
+    while (true)
+    {
+        //  Manage and shedule threaed execution
+        //TODO
+        //Probably use signaling
+    }
+
     return 0;
 }
 
 int init (void)
 {
+    //  Initialisation Function
     initLcd ();
     initSerial ();
     return 0;

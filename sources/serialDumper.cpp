@@ -36,12 +36,14 @@ void sendSerial (void)
             serialDumperStruct *serialDumperData =
                 (serialDumperStruct *) serialDumperMailEvt.value.p;
 
+            //  Send MAIL data to serial port
             pcSerial.printf ("%f,%f,%d,%d\r\n",
                 serialDumperData -> acceleration,
                 serialDumperData -> slowage,
                 serialDumperData -> rawSpeed,
                 serialDumperData -> filteredSpeed);
 
+            //  Free up the struct
             serialDumperMail.free (serialDumperData);
         }
 

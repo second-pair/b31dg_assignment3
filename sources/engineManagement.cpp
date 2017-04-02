@@ -25,7 +25,6 @@ Queue <int, 16> distanceQueue;
 
 void engineManager (void)
 {
-	//In:  acceleration, slowage, engine status
 	osEvent accelerationQueueEvt;
 	osEvent slowageQueueEvt;
 	osEvent engineStatusQueueEvt;
@@ -44,7 +43,8 @@ void engineManager (void)
 		//  Check if a message was received
 		if (accelerationQueueEvt.status == osEventMessage)
 			//  New value received -> store it
-			memcpy (&acceleration, accelerationQueueEvt.value.p, sizeof (float));
+			memcpy (&acceleration, accelerationQueueEvt.value.p,
+				sizeof (float));
 
 		//  Read the Slowage Queue
 		slowageQueueEvt = slowageQueueEM.get ();

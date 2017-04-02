@@ -49,7 +49,8 @@ void engineStatus (void)
 		//  Check if a message was received
 		if (accelerationQueueEvt.status == osEventMessage)
 			//  New value received -> store it
-			memcpy (&acceleration, accelerationQueueEvt.value.p, sizeof (float));
+			memcpy (&acceleration, accelerationQueueEvt.value.p,
+				sizeof (float));
 
 		//  Read the Slowage Queue
 		slowageQueueEvt = slowageQueueESU.get ();

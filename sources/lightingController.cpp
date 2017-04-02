@@ -104,7 +104,7 @@ void indicatorStrober (void)
 	char currIndicatorState;
 	while (true)
 	{
-		//  Read stored Indicator State
+		//  Read stored Indicator State to local variable
 		indicatorStateMutex.lock ();
 		currIndicatorState = indicatorState;
 		indicatorStateMutex.unlock ();
