@@ -30,6 +30,7 @@ int initSerial (void);
 //  Functions
 void writeLcd (char line, char offset, char *message);
 //  Threaded
+void readControls (void);
 void lighting (void);
 
 //  Logic Parameters
@@ -43,26 +44,32 @@ extern MCP23017 *par_port;
 extern WattBob_TextLCD *lcd;
 
 //  Threads
+extern Thread readControlsThread;
 extern Thread lightingThread;
 
 //  Mutexes
 extern Mutex writeLcdMutex;
 
 //  Data Queues
+extern Queue <unsigned short int, 16> accelerationQueue;
+extern Queue <unsigned short int, 16> slowageQueue;
 extern Queue <bool, 16> engineStatusQueue;
 
 //  IO
 //  Serial Comms
 extern Serial pcSerial;
 //  Digital Inputs
+extern DigitalIn engineStatusSwt;
 extern DigitalIn sideLightSwt;
 extern DigitalIn leftSigSwt;
 extern DigitalIn rightSigSwt;
 //  Analogue Inputs
-//extern AnalogIn accelerator;
-//extern AnalogIn brake;
+extern AnalogIn accelerator;
+extern AnalogIn brake;
+//speedometer PWM?
 //  Digital Outputs
 extern DigitalOut engineStatusLed;
 extern DigitalOut sideLightLed;
 extern DigitalOut leftSigLed;
 extern DigitalOut rightSigLed;
+//extern DigitalOut overspeedLed;

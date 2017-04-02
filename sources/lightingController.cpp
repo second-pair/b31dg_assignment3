@@ -18,9 +18,6 @@
 //  Threads
 Thread lightingThread;
 
-//  Data Queues
-Queue <bool, 16> engineStatusQueue;  //  Move to "Engine Control Grabber" later
-
 //  IO
 //  Digital Inputs
 DigitalIn sideLightSwt (p12);
@@ -36,13 +33,20 @@ void lighting (void)  //  Threaded
 {
 	osEvent engineStatusQueueEvt;
 	bool engineStatus = 0;
+	bool sideLight;
+	bool leftSig;
+	bool rightSig;
 
 	while (true)
 	{
-		//  Simply route switch inputs to LEDs
-		sideLightLed = sideLightSwt;
-		leftSigLed = leftSigSwt;
-		rightSigLed = rightSigSwt;
+		//  Read lighting data from switches
+		sideLight = sideLightSwt;
+		leftSig = leftSigSwt;
+		rightSig = rightSigSwt;
+		//  Drive LEDs with lighting data
+		sideLightLed = sideLight;
+		leftSigLed = leftSig;
+		rightSigLed = rightSig;
 
 		//  Read the Engine Status Queue
 		engineStatusQueueEvt = engineStatusQueue.get ();
@@ -52,6 +56,8 @@ void lighting (void)  //  Threaded
 			engineStatus = (bool) engineStatusQueueEvt.value.p;
 		//  Update Engine Status LED with stored value
 		engineStatusLed = engineStatus;
+
+		Thread::wait (1);
 	}
 
 	return;

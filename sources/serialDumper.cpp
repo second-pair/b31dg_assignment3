@@ -34,6 +34,8 @@ int initSerial (void)
     //  Send CSV Headers
     pcSerial.printf("Blair Edwards Assignment 2\n");
     pcSerial.printf ("Some Table Headers?\n");
+
+	return 0;
 }
 
 //  *--</Main Code>--*  //
