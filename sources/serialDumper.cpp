@@ -15,6 +15,10 @@
 
 #include "includes.h"
 
+//  Setup IO
+//  Serial Comms
+Serial pcSerial (USBTX, USBRX);
+
 void sendSerial (void)
 {
 	//  Currently not implemented (planned)
@@ -23,6 +27,13 @@ void sendSerial (void)
     pcSerial.printf ("Nothing to %s\n", "send yet.");
 
     return;
+}
+
+int initSerial (void)
+{
+    //  Send CSV Headers
+    pcSerial.printf("Blair Edwards Assignment 2\n");
+    pcSerial.printf ("Some Table Headers?\n");
 }
 
 //  *--</Main Code>--*  //

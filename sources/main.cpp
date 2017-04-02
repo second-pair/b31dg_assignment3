@@ -48,10 +48,6 @@
 
 #include "includes.h"
 
-//  LCD Parameters
-MCP23017 *par_port;
-WattBob_TextLCD *lcd;
-
 //  Threads
 Thread recvDataThd;
 Thread sendDataThd;
@@ -60,8 +56,6 @@ Thread sendDataThd;
 Queue <char, 16> dataQueue;
 
 //  IO
-//  Serial Comms
-Serial pcSerial (USBTX, USBRX);
 //  Digital Inputs
 //DigitalIn aDigitalIn (p0);
 //  Analogue Inputs
@@ -89,10 +83,12 @@ void sendData (void)
 
 void recvData (void)
 {
+    char toSend [16];
     Thread::signal_wait (0x2);
     osEvent evt = dataQueue.get ();
-    lcd -> locate (1, 0);
-    lcd -> printf ("msg %s", evt.value.p);
+    strcpy (toSend, "msg ");
+    strcat (toSend, (const char *) evt.value.p);
+    writeLcd (1, 0, toSend);
     return;
 }
 
@@ -116,26 +112,6 @@ int init (void)
     initLcd ();
     initSerial ();
     return 0;
-}
-
-int initLcd (void)
-{
-    //  Initialise the display
-    par_port = new MCP23017(p9, p10, 0x40);
-    par_port->config(0x0F00, 0x0F00, 0x0F00);  // configure MCP23017 chip on WattBob
-    lcd = new WattBob_TextLCD(par_port);
-    par_port->write_bit(1,BL_BIT);  // turn LCD backlight ON
-
-    //  Setup initial fields
-    lcd -> cls ();  //  Clear LCD
-    return 0;
-}
-
-int initSerial (void)
-{
-    //  Send CSV Headers
-    pcSerial.printf("Blair Edwards Assignment 2\n");
-    pcSerial.printf ("Some Table Headers?\n");
 }
 
 //  *--</Main Code>--*  //

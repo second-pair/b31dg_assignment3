@@ -27,6 +27,7 @@ int main (void);
 int init (void);
 int initLcd (void);
 int initSerial (void);
+void writeLcd (char line, char offset, char *message);
 
 //  Logic Parameters
 #define TRUE 1
@@ -41,6 +42,9 @@ extern WattBob_TextLCD *lcd;
 //  Threads
 extern Thread recvDataThd;
 extern Thread sendDataThd;
+
+//  Mutexes
+extern Mutex writeLcdMutex;
 
 //  Data Queues
 extern Queue <char, 16> dataQueue;

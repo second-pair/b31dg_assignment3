@@ -16,7 +16,7 @@ clean-srcs:
 srcs: clean-srcs
 	mkdir src-builds
 	mbed compile -t $(TOOLCHAIN) -m $(PLATFORM) --build=src-builds --source=lib-builds --source=sources --source=headers
-	
+
 clean-extras:
 	if exist BUILD rmdir /Q /S BUILD
 	if exist mbed_settings.pyc del /Q mbed_settings.pyc
