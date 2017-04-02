@@ -4,6 +4,11 @@
  Blair Edwards (BE38)
  Heriot-Watt University
 
+ -=-   Programme Details  -=-
+ Title:  b31dg_assignment3
+ Git Repo:  https://github.com/second-pair/b31dg_assignment3
+ More Info:  Please read README.md
+
  -=-  Dates  -=-
  Started 2017-03-20
  Edited  2017-04-02
