@@ -66,8 +66,8 @@ void engineManager (void)
 			newSpeed = speed + acceleration - slowage;
 			if (newSpeed < 0)
 				speed = 0;
-			else if (newSpeed > 255)
-				speed = 255;
+			else if (newSpeed > MAX_SPEED)
+				speed = MAX_SPEED;
 			else
 				speed = newSpeed;
 		}

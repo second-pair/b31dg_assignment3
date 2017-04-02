@@ -41,6 +41,7 @@ void engineStatus (void);
 #define FALSE 0
 #define HIGH 1
 #define LOW 0
+#define MAX_SPEED 250
 
 //  LCD Parameters
 extern MCP23017 *par_port;
@@ -78,13 +79,14 @@ extern DigitalIn rightSigSwt;
 //  Analogue Inputs
 extern AnalogIn accelerator;
 extern AnalogIn brake;
-//speedometer PWM?
 //  Digital Outputs
 extern DigitalOut engineStatusLed;
 extern DigitalOut sideLightLed;
 extern DigitalOut leftSigLed;
 extern DigitalOut rightSigLed;
 extern DigitalOut overspeedLed;
+//  PWM Outputs
+extern PwmOut speedometer;
 
 //  Structs
 //theMailQueue struct

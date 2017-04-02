@@ -19,9 +19,10 @@
 Thread engineStatusThread;
 
 //  IO
-//Out to Servo, LCD, Overspeed, MAIL
-//In Raw speed (to be filtered), distance, acc, slowage
+//  Digital Outputs
 DigitalOut overspeedLed (p16);
+//  PWM Outputs
+PwmOut speedometer (p21);
 
 void engineStatus (void)
 {
@@ -35,6 +36,7 @@ void engineStatus (void)
 	char filteredSpeed = 0;
 	int distance = 0;
 	char toSend [16];
+	speedometer.period (0.020);
 
 	while (true)
 	{
@@ -76,6 +78,8 @@ void engineStatus (void)
 
 
 		//  Control Servo to represent filtered speed
+		speedometer.pulsewidth_us (2000 - (filteredSpeed * 8));
+
 		//  Write speed and distance to LCD
 		sprintf (toSend, "%3d", filteredSpeed);
 		writeLcd (0, 13, toSend);

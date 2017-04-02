@@ -42,7 +42,6 @@
 
  -=-  TODO  -=-
  =>  Abstract code in engineStatus
- =>  Servo Control
  =>  MAIL Queue
  =>  Some semblence of time for distance calculator
  =>  Scheduling - perhaps use signaling?

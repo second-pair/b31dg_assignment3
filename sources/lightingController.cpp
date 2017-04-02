@@ -56,7 +56,6 @@ void lighting (void)  //  Threaded
 		//  Set Side Lights
 		sideLightLed = sideLight;
 
-//		sprintf (toSend, "%d %d ", leftSig, rightSig);
 		//  Set indicator Status
 		if ((leftSig == HIGH) && (rightSig == HIGH))
 		{
