@@ -19,10 +19,12 @@
 Thread readControlsThread;
 
 //  Data Queues
-MemoryPool <unsigned short int, 16> accelerationMPool;
-Queue <unsigned short int, 16> accelerationQueue;
-Queue <unsigned short int, 16> slowageQueue;
-Queue <bool, 16> engineStatusQueue;
+Queue <float, 16> accelerationQueueEM;
+Queue <float, 16> slowageQueueEM;
+Queue <bool, 16> engineStatusQueueEM;
+Queue <float, 16> accelerationQueueESU;
+Queue <float, 16> slowageQueueESU;
+Queue <bool, 16> engineStatusQueueLC;
 
 //  IO
 //  Digital Inputs
@@ -33,23 +35,28 @@ AnalogIn brake (p20);
 
 void readControls (void)
 {
-	unsigned short int acceleration;
-	unsigned short int slowage;
+	float acceleration;
+	float slowage;
 	bool engineStatus;
 
 	while (true)
 	{
 		//  Read Inputs
-		acceleration = accelerator.read_u16 ();
-		slowage = brake.read_u16 ();
+		acceleration = accelerator.read ();
+		slowage = brake.read ();
+		//acceleration = 0.6;
+		//slowage = 0.4;
 		engineStatus = engineStatusSwt;
 
 		//  Write to Engine Manager
+		accelerationQueueEM.put (&acceleration);
+		slowageQueueEM.put (&slowage);
+		engineStatusQueueEM.put (&engineStatus);
 
 		//  Write to Engine Status Unit
-		accelerationQueue.put (&acceleration);
-		slowageQueue.put (&slowage);
-		engineStatusQueue.put (&engineStatus);
+		accelerationQueueESU.put (&acceleration);
+		slowageQueueESU.put (&slowage);
+		engineStatusQueueLC.put (&engineStatus);
 
 		Thread::wait (1);
 }

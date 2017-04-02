@@ -41,15 +41,11 @@
  =>  LED4 = Right Turn Indicator
 
  -=-  TODO  -=-
- =>  Write many
- =>  Turn Indicator Flashing (separate functions?)
- =>  Turn Indicator Hazard Mode
- =>  Engine Manager
- =>  Make engine simulation toggleable?  Investigate
  =>  Abstract code in engineStatus
- =>  Investigate Queue direct assignment (What is 'p' in "queue.value.p"?)
  =>  Servo Control
  =>  MAIL Queue
+ =>  Some semblence of time for distance calculator
+ =>  Scheduling - perhaps use signaling?
 
 //  *--</Preface>--*  */
 
@@ -66,6 +62,7 @@ int main (void)
     readControlsThread.start (readControls);
     engineManagerThread.start (engineManager);
     lightingThread.start (lighting);
+    indicatorStroberThread.start (indicatorStrober);
     engineStatusThread.start (engineStatus);
 
     Thread::wait (osWaitForever);

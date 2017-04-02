@@ -29,8 +29,8 @@ void engineStatus (void)
 	osEvent slowageQueueEvt;
 	osEvent speedQueueEvt;
 	osEvent distanceQueueEvt;
-	unsigned short int acceleration = 0;
-	unsigned short int slowage = 0;
+	float acceleration = 0;
+	float slowage = 0;
 	char rawSpeed [4] = {0, 0, 0, 0};
 	char filteredSpeed = 0;
 	int distance = 0;
@@ -39,20 +39,18 @@ void engineStatus (void)
 	while (true)
 	{
 		//  Read the Acceleration Queue
-		accelerationQueueEvt = accelerationQueue.get ();
+		accelerationQueueEvt = accelerationQueueESU.get ();
 		//  Check if a message was received
 		if (accelerationQueueEvt.status == osEventMessage)
 			//  New value received -> store it
-			//acceleration = *((unsigned short int *) (&accelerationQueueEvt.value.p));
-			memcpy (&acceleration, accelerationQueueEvt.value.p, sizeof (unsigned short int));
+			memcpy (&acceleration, accelerationQueueEvt.value.p, sizeof (float));
 
 		//  Read the Slowage Queue
-		slowageQueueEvt = slowageQueue.get ();
+		slowageQueueEvt = slowageQueueESU.get ();
 		//  Check if message was received
 		if (slowageQueueEvt.status == osEventMessage)
 			//  New value received -> store it
-			//slowage = (unsigned short int) slowageQueueEvt.value.p;
-			memcpy (&slowage, slowageQueueEvt.value.p, sizeof (unsigned short int));
+			memcpy (&slowage, slowageQueueEvt.value.p, sizeof (float));
 
 		//  Read the Speed Queue (FILTER)
 		speedQueueEvt = speedQueue.get ();
@@ -64,7 +62,6 @@ void engineStatus (void)
 			rawSpeed [3] = rawSpeed [2];
 			rawSpeed [2] = rawSpeed [1];
 			rawSpeed [1] = rawSpeed [0];
-			//rawSpeed [0] = (char) speedQueueEvt.value.p;
 			memcpy (&rawSpeed[0], speedQueueEvt.value.p, sizeof (char));
 			filteredSpeed = (rawSpeed [3] + rawSpeed [2] + rawSpeed [1]
 				+ rawSpeed [0]) / 4;
@@ -75,16 +72,15 @@ void engineStatus (void)
 		//  Check if message was received
 		if (distanceQueueEvt.status == osEventMessage)
 			//  New value received -> store it
-			//distance = (int) distanceQueueEvt.value.p;
 			memcpy (&distance, distanceQueueEvt.value.p, sizeof (int));
 
 
 		//  Control Servo to represent filtered speed
 		//  Write speed and distance to LCD
-		sprintf (toSend, "Speed:  %d MPH", filteredSpeed);
-		writeLcd (0, 0, toSend);
-		sprintf (toSend, "Dist:  %d m", distance);
-		writeLcd (1, 0, toSend);
+		sprintf (toSend, "%3d", filteredSpeed);
+		writeLcd (0, 13, toSend);
+		sprintf (toSend, "%11d", distance);
+		writeLcd (1, 5, toSend);
 
 		//  Detect overspeed
 		if (filteredSpeed > 70)

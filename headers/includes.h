@@ -33,6 +33,7 @@ void writeLcd (char line, char offset, const char *message);
 void readControls (void);
 void engineManager (void);
 void lighting (void);
+void indicatorStrober (void);
 void engineStatus (void);
 
 //  Logic Parameters
@@ -49,17 +50,22 @@ extern WattBob_TextLCD *lcd;
 extern Thread readControlsThread;
 extern Thread engineManagerThread;
 extern Thread lightingThread;
+extern Thread indicatorStroberThread;
 extern Thread engineStatusThread;
 
 //  Mutexes
 extern Mutex writeLcdMutex;
+extern Mutex indicatorStateMutex;
 
 //  Data Queues
-extern Queue <unsigned short int, 16> accelerationQueue;
-extern Queue <unsigned short int, 16> slowageQueue;
+extern Queue <float, 16> accelerationQueueEM;
+extern Queue <float, 16> slowageQueueEM;
+extern Queue <bool, 16> engineStatusQueueEM;
+extern Queue <float, 16> accelerationQueueESU;
+extern Queue <float, 16> slowageQueueESU;
+extern Queue <bool, 16> engineStatusQueueLC;
 extern Queue <char, 16> speedQueue;
 extern Queue <int, 16> distanceQueue;
-extern Queue <bool, 16> engineStatusQueue;
 
 //  IO
 //  Serial Comms

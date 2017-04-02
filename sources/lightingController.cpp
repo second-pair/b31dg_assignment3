@@ -17,6 +17,10 @@
 
 //  Threads
 Thread lightingThread;
+Thread indicatorStroberThread;
+
+//  Mutexes
+Mutex indicatorStateMutex;
 
 //  IO
 //  Digital Inputs
@@ -29,6 +33,9 @@ DigitalOut sideLightLed (LED2);
 DigitalOut leftSigLed (LED3);
 DigitalOut rightSigLed (LED4);
 
+//  Global Variables
+char indicatorState = 0;
+
 void lighting (void)  //  Threaded
 {
 	osEvent engineStatusQueueEvt;
@@ -37,31 +44,108 @@ void lighting (void)  //  Threaded
 	bool leftSig;
 	bool rightSig;
 
+	char toSend [16];
+
 	while (true)
 	{
 		//  Read lighting data from switches
 		sideLight = sideLightSwt;
 		leftSig = leftSigSwt;
 		rightSig = rightSigSwt;
-		//  Drive LEDs with lighting data
+
+		//  Set Side Lights
 		sideLightLed = sideLight;
-		leftSigLed = leftSig;
-		rightSigLed = rightSig;
+
+//		sprintf (toSend, "%d %d ", leftSig, rightSig);
+		//  Set indicator Status
+		if ((leftSig == HIGH) && (rightSig == HIGH))
+		{
+			//  Hazard Mode
+			indicatorStateMutex.lock ();
+			indicatorState = 3;
+			indicatorStateMutex.unlock ();
+		}
+		else if (leftSig == HIGH)
+		{
+			//  Left Indicator
+			indicatorStateMutex.lock ();
+			indicatorState = 1;
+			indicatorStateMutex.unlock ();
+		}
+		else if (rightSig == HIGH)
+		{
+			//  Right Indicator
+			indicatorStateMutex.lock ();
+			indicatorState = 2;
+			indicatorStateMutex.unlock ();
+		}
+		else
+		{
+			//  No Mode
+			indicatorStateMutex.lock ();
+			indicatorState = 0;
+			indicatorStateMutex.unlock ();
+		}
 
 		//  Read the Engine Status Queue
-		engineStatusQueueEvt = engineStatusQueue.get ();
+		engineStatusQueueEvt = engineStatusQueueLC.get ();
 		//  Check if a message was received
 		if (engineStatusQueueEvt.status == osEventMessage)
 			//  New value received -> store it
-			//engineStatus = (bool) engineStatusQueueEvt.value.p;
 			memcpy (&engineStatus, engineStatusQueueEvt.value.p, sizeof (bool));
 		//  Update Engine Status LED with stored value
 		engineStatusLed = engineStatus;
 
-		Thread::wait (1);
+		Thread::wait (10);
 	}
 
 	return;
+}
+
+void indicatorStrober (void)
+{
+	char currIndicatorState;
+	while (true)
+	{
+		//  Read stored Indicator State
+		indicatorStateMutex.lock ();
+		currIndicatorState = indicatorState;
+		indicatorStateMutex.unlock ();
+
+		//  Strobe indicators as necessary
+		if (currIndicatorState == 0)
+		{
+			//  No Indication
+			Thread::wait (100);
+		}
+		else if (currIndicatorState == 1)
+		{
+			//  Left Indicator
+			leftSigLed = HIGH;
+			Thread::wait (500);
+			leftSigLed = LOW;
+			Thread::wait (500);
+		}
+		else if (currIndicatorState == 2)
+		{
+			//  Right Indicator
+			rightSigLed = HIGH;
+			Thread::wait (500);
+			rightSigLed = LOW;
+			Thread::wait (500);
+		}
+		else if (currIndicatorState == 3)
+		{
+			//  Hazard Mode
+			leftSigLed = HIGH;
+			rightSigLed = HIGH;
+			Thread::wait (1000);
+			leftSigLed = LOW;
+			rightSigLed = LOW;
+			Thread::wait (1000);
+		}
+
+	}
 }
 
 //  *--</Main Code>--*  //

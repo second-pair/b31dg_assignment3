@@ -41,6 +41,8 @@ int initLcd (void)
 
     //  Setup initial fields
     lcd -> cls ();  //  Clear LCD
+	writeLcd (0, 0, "S(MPH)");
+	writeLcd (1, 0, "D(m)  ");
     return 0;
 }
 
