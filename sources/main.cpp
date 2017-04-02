@@ -3,57 +3,67 @@ https://docs.mbed.com/docs/mbed-os-api-reference/en/latest/APIs/tasks/rtos/
 https://www.element14.com/community/docs/DOC-46650/l/arm-keil-rtx-real-time-operating-system-overview
 */
 
-#include "mbed.h"
-#include "rtos.h"
+#include "includes.h"
 
-DigitalOut myled1 (LED1);
-DigitalOut myled2 (LED2);
-DigitalOut myled3 (LED3);
-DigitalOut myled4 (LED4);
+MCP23017 *par_port;
+WattBob_TextLCD *lcd;
+//DigitalOut myled1 (LED1);
 
-void led_thread1 (void)
+Thread recvDataThd;
+Thread sendDataThd;
+Queue <char, 16> dataQueue;
+
+
+void sendData (void)
 {
-    while (true)
-    {
-        myled1 = !myled1;
-        Thread::wait (500);
-    }
-}
-void led_thread2 (void)
-{
-    while (true)
-    {
-        myled2 = !myled2;
-        Thread::wait (1000);
-    }
-}
-void led_thread3 (void)
-{
-    while (true)
-    {
-        myled3 = !myled3;
-        Thread::wait (2000);
-    }
-}
-void led_thread4 (void)
-{
-    while (true)
-    {
-        myled4 = !myled4;
-        Thread::wait (4000);
-    }
+    Thread::signal_wait (0x1);
+    lcd -> locate (0, 0);
+    lcd -> printf ("Sig");
+    Thread::wait (2500);
+
+    dataQueue.put ("456");
+    recvDataThd.signal_set (0x2);
+    return;
 }
 
-int main ()
+void recvData (void)
 {
-    Thread t1;
-    Thread t2;
-    Thread t3;
-    Thread t4;
-    t1.start (led_thread1);
-    t2.start (led_thread2);
-    t3.start (led_thread3);
-    t4.start (led_thread4);
+    Thread::signal_wait (0x2);
+    osEvent evt = dataQueue.get ();
+    lcd -> locate (1, 0);
+    lcd -> printf ("msg %s", evt.value.p);
+    return;
+}
+
+
+int main (void)
+{
+    init ();
+
+    recvDataThd.start (recvData);
+    sendDataThd.start (sendData);
+
+    Thread::wait (2500);
+    sendDataThd.signal_set (0x1);
 
     Thread::wait (osWaitForever);
+}
+
+int init (void)
+{
+    initLcd ();
+    return 0;
+}
+
+int initLcd (void)
+{
+    //  Initialise the display
+    par_port = new MCP23017(p9, p10, 0x40);
+    par_port->config(0x0F00, 0x0F00, 0x0F00);  // configure MCP23017 chip on WattBob
+    lcd = new WattBob_TextLCD(par_port);
+    par_port->write_bit(1,BL_BIT);  // turn LCD backlight ON
+
+    //  Setup initial fields
+    lcd -> cls ();  //  Clear LCD
+    return 0;
 }
