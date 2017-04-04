@@ -7,11 +7,11 @@
  -=-   Programme Details  -=-
  Title:  b31dg_assignment3
  Git Repo:  https://github.com/second-pair/b31dg_assignment3
- More Info:  Please read README.md
+ Compilation:  Please read README.md
 
  -=-  Dates  -=-
  Started 2017-03-20
- Edited  2017-04-02
+ Edited  2017-04-05
 
  -=-  Description  -=-
  This programme attempts to create a Real-Time car controller.
@@ -43,7 +43,6 @@
  -=-  TODO  -=-
  =>  Abstract code in engineStatus
  =>  Some semblence of time for distance calculator
- =>  Scheduling - perhaps use signaling?
  =>  Documentation
 
 //  *--</Preface>--*  */
@@ -57,9 +56,23 @@
 int main (void)
 {
     init ();
-    //  Start threads
+
+    //  I originally wanted to have this managed by a separeate high-priority
+    //    thread, but the MBED glitched out when adding this thread, with some
+    //    MBED forum users claining their devices being out of memory in this
+    //    situation.
+    //threadManagerThread.set_priority (osPriorityRealtime);
     //threadManagerThread.start (threadManager);
 
+    //  Set Thread priorities
+    readControlsThread.set_priority (osPriorityNormal);
+    engineManagerThread.set_priority (osPriorityHigh);
+    lightingThread.set_priority (osPriorityBelowNormal);
+    indicatorStroberThread.set_priority (osPriorityLow);
+    engineStatusThread.set_priority (osPriorityAboveNormal);
+    sendSerialThread.set_priority (osPriorityBelowNormal);
+
+    //  Start threads
     readControlsThread.start (readControls);
     engineManagerThread.start (engineManager);
     lightingThread.start (lighting);
@@ -67,37 +80,36 @@ int main (void)
     engineStatusThread.start (engineStatus);
     sendSerialThread.start (sendSerial);
 
-	//  Set Thread priorities
-	readControlsThread.set_priority (osPriorityNormal);
-    engineManagerThread.set_priority (osPriorityHigh);
-    lightingThread.set_priority (osPriorityBelowNormal);
-    indicatorStroberThread.set_priority (osPriorityLow);
-    engineStatusThread.set_priority (osPriorityAboveNormal);
-    sendSerialThread.set_priority (osPriorityNormal);
-
     while (true)
     {
-        threadManager ();
-        //  Cycle readControlSignal through one cycle
+        //  Each cycle currently talkes 50ms (20Hz)
+        //  Also, the indicator thread is currently held as a separate,
+        //    low-priority task
+
+        //  Cycle readControls through one cycle
         readControlsThread.signal_set (0x1);
         readControlsThread.signal_set (0x0);
-        Thread::wait (50);
+        Thread::wait (5);
 
+        //  Cycle engineManager through one cycle
         engineManagerThread.signal_set (0x1);
         engineManagerThread.signal_set (0x0);
-        Thread::wait (50);
+        Thread::wait (20);
 
+        //  Cycle lighting through one cycle
         lightingThread.signal_set (0x1);
         lightingThread.signal_set (0x0);
-        Thread::wait (50);
+        Thread::wait (10);
 
+        //  Cycle engineStatus through one cycle
         engineStatusThread.signal_set (0x1);
         engineStatusThread.signal_set (0x0);
-        Thread::wait (50);
+        Thread::wait (10);
 
+        //  Cycle sendSerial through one cycle
         sendSerialThread.signal_set (0x1);
         sendSerialThread.signal_set (0x0);
-        Thread::wait (50);
+        Thread::wait (5);
     }
 
     //Thread::wait (osWaitForever);
@@ -109,10 +121,6 @@ int init (void)
     //  Initialisation Function
     initLcd ();
     initSerial ();
-
-    //  Setup and run high-priority thread management thread
-    //threadManagerThread.set_priority (osPriorityRealtime);
-    //threadManagerThread.start (threadManager);
 
     return 0;
 }
