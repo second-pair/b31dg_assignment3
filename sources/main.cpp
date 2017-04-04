@@ -57,8 +57,9 @@
 int main (void)
 {
     init ();
-
     //  Start threads
+    //threadManagerThread.start (threadManager);
+
     readControlsThread.start (readControls);
     engineManagerThread.start (engineManager);
     lightingThread.start (lighting);
@@ -66,13 +67,40 @@ int main (void)
     engineStatusThread.start (engineStatus);
     sendSerialThread.start (sendSerial);
 
+	//  Set Thread priorities
+	readControlsThread.set_priority (osPriorityNormal);
+    engineManagerThread.set_priority (osPriorityHigh);
+    lightingThread.set_priority (osPriorityBelowNormal);
+    indicatorStroberThread.set_priority (osPriorityLow);
+    engineStatusThread.set_priority (osPriorityAboveNormal);
+    sendSerialThread.set_priority (osPriorityNormal);
+
     while (true)
     {
-        //  Manage and shedule threaed execution
-        //TODO
-        //Probably use signaling
+        threadManager ();
+        //  Cycle readControlSignal through one cycle
+        readControlsThread.signal_set (0x1);
+        readControlsThread.signal_set (0x0);
+        Thread::wait (50);
+
+        engineManagerThread.signal_set (0x1);
+        engineManagerThread.signal_set (0x0);
+        Thread::wait (50);
+
+        lightingThread.signal_set (0x1);
+        lightingThread.signal_set (0x0);
+        Thread::wait (50);
+
+        engineStatusThread.signal_set (0x1);
+        engineStatusThread.signal_set (0x0);
+        Thread::wait (50);
+
+        sendSerialThread.signal_set (0x1);
+        sendSerialThread.signal_set (0x0);
+        Thread::wait (50);
     }
 
+    //Thread::wait (osWaitForever);
     return 0;
 }
 
@@ -81,6 +109,11 @@ int init (void)
     //  Initialisation Function
     initLcd ();
     initSerial ();
+
+    //  Setup and run high-priority thread management thread
+    //threadManagerThread.set_priority (osPriorityRealtime);
+    //threadManagerThread.start (threadManager);
+
     return 0;
 }
 

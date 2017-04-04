@@ -38,6 +38,9 @@ void engineManager (void)
 
 	while (true)
 	{
+		//  Wait to be cycled
+		Thread::signal_wait (0x1);
+
 		//  Read the Acceleration Queue
 		accelerationQueueEvt = accelerationQueueEM.get ();
 		//  Check if a message was received
@@ -82,8 +85,6 @@ void engineManager (void)
 		//  Write to Engine Status Unit
 		speedQueue.put (&speedInt);
 		distanceQueue.put (&distance);
-
-		Thread::wait (100);
 	}
 }
 

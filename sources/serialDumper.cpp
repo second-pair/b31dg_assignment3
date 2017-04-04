@@ -46,8 +46,6 @@ void sendSerial (void)
             //  Free up the struct
             serialDumperMail.free (serialDumperData);
         }
-
-        Thread::wait (10);
     }
 
     return;
