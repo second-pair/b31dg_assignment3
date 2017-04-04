@@ -32,10 +32,11 @@ I had difficulty and encountered a lot of problems getting this to work, so I th
 1.  Install the `mbed-cli` with `pip2 install mbed-cli` in an elevated prompt.
 	*  Note:  If you have Python3 installed and don't specify `pip2` or `pip2.7`, you will likely end up with a non-working copy installed with Python3.
 
-###  A note about `python3`:
+###  A Note About `python3`:
 If you also have `python3` installed, you may want to consider adding these to your *Path* as well:
-	*  *C:\Users\Blair Edwards\AppData\Local\Programs\Python\Python36-32*
-	*  *C:\Users\Blair Edwards\AppData\Local\Programs\Python\Python36-32\Scripts*
+*  *C:\Users\Blair Edwards\AppData\Local\Programs\Python\Python36-32*
+*  *C:\Users\Blair Edwards\AppData\Local\Programs\Python\Python36-32\Scripts*
+
 Also, instead of invoking using the `python` command, consider using `py`, which is included on the *Path* at *C:\Windows*.
 If you are running a script with a valid shebang, the launcher should auto-detect the correct  varsion and run it accordingly.
 Otherwise, this will enable you to run a `python2` script with `py -2 py2Script.py` and a `python3` script with `py -3 py3Script.py`. 
@@ -65,7 +66,7 @@ For example, running `make all` will recompile the static libraries and then com
 *  `mbed_cli` documentation available from <https://docs.mbed.com/docs/mbed-os-handbook/en/5.1/dev_tools/cli/>.
 *  This project's repository is <https://github.com/second-pair/b31dg_assignment3.git>.
 
-###  Windows-specific download locations:
+###  Windows-Specific Download Locations:
 *  `arm_gcc` toolchain available from <https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads>.
 *  `make` available from <http://gnuwin32.sourceforge.net/packages/make.htm>.
 *  `git` available from <https://git-scm.com/downloads>.
