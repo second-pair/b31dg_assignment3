@@ -19,7 +19,7 @@
 Thread engineStatusThread;
 
 //  Data Queues
-Mail <serialDumperStruct, 16> serialDumperMail;
+Mail <serialDumperStruct, 100> serialDumperMail;
 
 //  IO
 //  Digital Outputs
@@ -82,7 +82,8 @@ void engineStatus (void)
 			memcpy (&distance, distanceQueueEvt.value.p, sizeof (int));
 
 		//  Control Servo to represent filtered speed
-		speedometer.pulsewidth_us (2000 - (filteredSpeed * 8));
+		//  Should be '* 8', but for some reason my servo was locking out beyond "200 MPH"
+		speedometer.pulsewidth_us (2000 - (filteredSpeed * 6.4));
 
 		//  Write speed and distance to LCD
 		sprintf (toSend, "%3d", filteredSpeed);

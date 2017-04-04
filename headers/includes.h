@@ -78,7 +78,7 @@ extern Queue <float, 16> slowageQueueESU;
 extern Queue <bool, 16> engineStatusQueueLC;
 extern Queue <char, 16> speedQueue;
 extern Queue <int, 16> distanceQueue;
-extern Mail <serialDumperStruct, 16> serialDumperMail;
+extern Mail <serialDumperStruct, 100> serialDumperMail;
 
 //  IO
 //  Serial Comms
