@@ -92,6 +92,7 @@ extern DigitalIn rightSigSwt;
 extern AnalogIn accelerator;
 extern AnalogIn brake;
 //  Digital Outputs
+extern DigitalOut executionPin;
 extern DigitalOut engineStatusLed;
 extern DigitalOut sideLightLed;
 extern DigitalOut leftSigLed;

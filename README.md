@@ -47,8 +47,11 @@ These versions should then coexst nicely, with the exception of `pip` as discuss
 	*  `git clone https://github.com/second-pair/b31dg_assignment3.git`
 1.  Initialise using the `mbed_cli`:
 	*  `cd b31dg_assignment3`
-	*  `pip2 install -r .temp\tools\requirements.txt`
+	*  `mbed new . --create-only`
 	*  `mbed deploy`
+	*  `mbed add mbed-os libraries\mbed-os` if missing this library
+	*  `pip2 install -r .temp\tools\requirements.txt` if missing these tools
+	
 
 ##  Compilation Instructions
 While this project can be compiled using `mbed compile`, a *Makefile* has also been provided.
