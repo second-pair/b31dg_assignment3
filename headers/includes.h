@@ -30,6 +30,7 @@ int initSerial (void);
 //  Functions
 void writeLcd (char line, char offset, const char *message);
 //  Threaded
+void threadManager (void);
 void readControls (void);
 void engineManager (void);
 void lighting (void);
@@ -58,6 +59,7 @@ extern MCP23017 *par_port;
 extern WattBob_TextLCD *lcd;
 
 //  Threads
+extern Thread threadManagerThread;
 extern Thread readControlsThread;
 extern Thread engineManagerThread;
 extern Thread lightingThread;

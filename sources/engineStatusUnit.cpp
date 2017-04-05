@@ -44,6 +44,9 @@ void engineStatus (void)
 
 	while (true)
 	{
+		//  Wait to be cycled
+		Thread::signal_wait (0x1);
+
 		//  Read the Acceleration Queue
 		accelerationQueueEvt = accelerationQueueESU.get ();
 		//  Check if a message was received
@@ -103,8 +106,6 @@ void engineStatus (void)
 		serialDumperData -> rawSpeed = rawSpeed [0];
 		serialDumperData -> filteredSpeed = filteredSpeed;
 		serialDumperMail.put (serialDumperData);
-
-		Thread::wait (100);
 	}
 
 	serialDumperMail.free (serialDumperData);

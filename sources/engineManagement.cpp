@@ -38,6 +38,10 @@ void engineManager (void)
 
 	while (true)
 	{
+		//  This thread is cycled every 50ms
+		//  Wait to be cycled
+		Thread::signal_wait (0x1);
+
 		//  Read the Acceleration Queue
 		accelerationQueueEvt = accelerationQueueEM.get ();
 		//  Check if a message was received
@@ -63,7 +67,8 @@ void engineManager (void)
 		//  Calculate speed
 		if (engineStatus == HIGH)
 		{
-			newSpeed = speed + acceleration - slowage;
+			//  Max acceleration taken as 0 -> 60 in 5 seconds = 12MPH/s
+			newSpeed = speed + ((acceleration - slowage) * 0.6);
 			if (newSpeed < 0)
 				speed = 0;
 			else if (newSpeed > MAX_SPEED)
@@ -75,15 +80,15 @@ void engineManager (void)
 			speed = 0;
 		speedInt = (int) speed;
 
-		//  Calculate distance
+		//  Calculate m/c from Miles/h
 		//  1609.344 meters in a mile
-		distance += (int) (speed * 0.44704);  //  Also factor in time
+		//  60 * 60 * 20 = 72000 cycles in an hour
+		//  1 MPH = (1609.344 / 72000 =) 0.022352 meters per cycle
+		distance += (int) (speed * 0.022352);
 
 		//  Write to Engine Status Unit
 		speedQueue.put (&speedInt);
 		distanceQueue.put (&distance);
-
-		Thread::wait (100);
 	}
 }
 

@@ -46,6 +46,9 @@ void lighting (void)  //  Threaded
 
 	while (true)
 	{
+		//  Wait to be cycled
+		Thread::signal_wait (0x1);
+
 		//  Read lighting data from switches
 		sideLight = sideLightSwt;
 		leftSig = leftSigSwt;
@@ -92,8 +95,6 @@ void lighting (void)  //  Threaded
 			memcpy (&engineStatus, engineStatusQueueEvt.value.p, sizeof (bool));
 		//  Update Engine Status LED with stored value
 		engineStatusLed = engineStatus;
-
-		Thread::wait (100);
 	}
 
 	return;

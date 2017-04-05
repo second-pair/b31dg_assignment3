@@ -41,11 +41,12 @@ void readControls (void)
 
 	while (true)
 	{
+		//  Wait to be cycled
+		Thread::signal_wait (0x1);
+
 		//  Read Inputs
 		acceleration = accelerator.read ();
 		slowage = brake.read ();
-		//acceleration = 0.6;
-		//slowage = 0.4;
 		engineStatus = engineStatusSwt;
 
 		//  Write to Engine Manager
@@ -57,9 +58,7 @@ void readControls (void)
 		accelerationQueueESU.put (&acceleration);
 		slowageQueueESU.put (&slowage);
 		engineStatusQueueLC.put (&engineStatus);
-
-		Thread::wait (100);
-}
+	}
 
 	return;
 }
