@@ -58,8 +58,8 @@ void readControls (void)
 		slowageQueueESU.put (&slowage);
 		engineStatusQueueLC.put (&engineStatus);
 
-		Thread::wait (100);
-}
+		wait_us (99934);
+	}
 
 	return;
 }

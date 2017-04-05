@@ -104,7 +104,7 @@ void engineStatus (void)
 		serialDumperData -> filteredSpeed = filteredSpeed;
 		serialDumperMail.put (serialDumperData);
 
-		Thread::wait (100);
+		wait_us (147600);
 	}
 
 	serialDumperMail.free (serialDumperData);

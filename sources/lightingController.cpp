@@ -93,7 +93,7 @@ void lighting (void)  //  Threaded
 		//  Update Engine Status LED with stored value
 		engineStatusLed = engineStatus;
 
-		Thread::wait (100);
+		wait_us (499990);
 	}
 
 	return;

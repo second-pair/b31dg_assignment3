@@ -24,30 +24,39 @@ Serial pcSerial (USBTX, USBRX);
 
 void sendSerial (void)
 {
+	int i;
     osEvent serialDumperMailEvt;
     while (true)
     {
-        //  Get Latest MAIL Data
-        serialDumperMailEvt = serialDumperMail.get ();
-        //  Check if data was received
-        if (serialDumperMailEvt.status == osEventMail)
-        {
-            //  New values received -> store them
-            serialDumperStruct *serialDumperData =
-                (serialDumperStruct *) serialDumperMailEvt.value.p;
+        Thread::wait (20000);
+		timingPin = HIGH;
+       	//  Loop while data available
+       	for (i = 0; i < 20; i++)
+    	{
+   			//  Get Latest MAIL Data
+	       	serialDumperMailEvt = serialDumperMail.get ();
+	       	//  Check if valid
+    		if (serialDumperMailEvt.status == osEventMail)
+    		{
+	       	    //  New values received -> store them
+	       	    serialDumperStruct *serialDumperData =
+	       	    	(serialDumperStruct *) serialDumperMailEvt.value.p;
 
-            //  Send MAIL data to serial port
-            pcSerial.printf ("%f,%f,%d,%d\r\n",
-                serialDumperData -> acceleration,
-                serialDumperData -> slowage,
-                serialDumperData -> rawSpeed,
-                serialDumperData -> filteredSpeed);
-
-            //  Free up the struct
-            serialDumperMail.free (serialDumperData);
-        }
-
-        Thread::wait (10);
+	            //  Send MAIL data to serial port
+	            pcSerial.printf ("%f,%f,%d,%d\r\n",
+					serialDumperData -> acceleration,
+	               	serialDumperData -> slowage,
+	               	serialDumperData -> rawSpeed,
+	               	serialDumperData -> filteredSpeed);
+            
+	   			//  Release sequence from MAIL queue
+				serialDumperMail.free (serialDumperData);
+   	
+	            //  Get next sequence in MAIL queue
+				serialDumperMailEvt = serialDumperMail.get ();
+			}
+		}
+		timingPin = LOW;
     }
 
     return;

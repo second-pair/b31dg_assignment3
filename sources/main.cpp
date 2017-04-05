@@ -35,10 +35,14 @@
 
  -=-  Notes  -=-
  =>  Data communication between threads uses the "Queue" method
+ =>  Data being sent to serial is stored in a "MAIL Queue"
  =>  LED1 = Engine Status
  =>  LED2 = Side Lights
  =>  LED3 = Left Turn indicator
  =>  LED4 = Right Turn Indicator
+ =>  Initial plans were to have a separate thread that would
+ =>    handle thread execution, but I seem to have hit some
+ =>    thread count limit
 
  -=-  TODO  -=-
  =>  Abstract code in engineStatus
@@ -53,10 +57,19 @@
 //  *--<Main Code>--*  //
 
 #include "includes.h"
+DigitalOut timingPin (p30);
 
 int main (void)
 {
     init ();
+    
+    //  Set Thread priorities
+    readControlsThread.set_priority (osPriorityNormal);
+    engineManagerThread.set_priority (osPriorityHigh);
+    lightingThread.set_priority (osPriorityBelowNormal);
+    indicatorStroberThread.set_priority (osPriorityLow);
+    engineStatusThread.set_priority (osPriorityAboveNormal);
+	sendSerialThread.set_priority (osPriorityBelowNormal);
 
     //  Start threads
     readControlsThread.start (readControls);
@@ -66,14 +79,7 @@ int main (void)
     engineStatusThread.start (engineStatus);
     sendSerialThread.start (sendSerial);
 
-    while (true)
-    {
-        //  Manage and shedule threaed execution
-        //TODO
-        //Probably use signaling
-    }
-
-    return 0;
+	Thread::wait (osWaitForever);
 }
 
 int init (void)
