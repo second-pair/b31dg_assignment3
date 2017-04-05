@@ -4,6 +4,9 @@
  Blair Edwards (BE38)
  Heriot-Watt University
 
+ -=-  File  -=-
+ lcdController.cpp
+
  -=-  Part Of  -=-
  b31dg_assignment3
 
